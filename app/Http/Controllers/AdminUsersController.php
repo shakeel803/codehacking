@@ -9,6 +9,7 @@ use Hash;
 
 use App\User;
 use App\Role;
+use App\Photo;
 
 use App\Http\Requests\UsersRequest;
 
@@ -44,8 +45,21 @@ class AdminUsersController extends Controller
      */
     public function store(UsersRequest $request)
     {
-        $request->password = Hash::make($request->password);
-        User::create($request->all());
+        $input = $request->all();
+        $input['password']= Hash::make($request->password);
+
+        if($file = $request->file('photo_id'))
+        {
+            $name = time().'_'.$file->getClientOriginalName();
+            $file->move('images/',$name);
+
+            $photo = Photo::create(['file'=>$name]); 
+
+            $input['photo_id'] = $photo->id;
+        }
+
+
+        User::create($input);
         return redirect('admin/users');
     }
 
