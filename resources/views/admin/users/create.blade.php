@@ -33,7 +33,7 @@
 
         <div class="form-group">
                 {!! Form::label('photo_id','Profile picture:') !!}
-            {!! Form::file('photo_id',null, ['class'=>'form-control','tabindex'=>5]) !!}
+            {!! Form::file('photo_id', ['class'=>'form-control','tabindex'=>'5']) !!}
         </div>
 
         <div class="form-group">
