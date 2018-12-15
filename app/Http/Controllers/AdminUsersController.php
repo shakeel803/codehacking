@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Hash;
+use Session;
 
 use App\User;
 use App\Role;
@@ -61,6 +62,7 @@ class AdminUsersController extends Controller
 
 
         User::create($input);
+        Session::flash('msg','New user has been created.');
         return redirect('admin/users');
     }
 
@@ -98,10 +100,9 @@ class AdminUsersController extends Controller
     public function update(UsersEditRequest $request, $id)
     {
         $user = User::findOrFail($id);
-
         if(trim($request->password) == '')
         {
-            $input = $input->except('password');
+            $input = $request->except('password');
         }
         else
         {
@@ -119,6 +120,7 @@ class AdminUsersController extends Controller
         }
 
         $user->update($input);
+        Session::flash('msg','User record has been updated.');
         return redirect('admin/users');
     }
 
@@ -130,6 +132,13 @@ class AdminUsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        unlink(public_path().$user->photo->file);
+
+
+        $user->delete();
+        Session::flash('msg','The user has been deleted.');
+        return redirect('admin/users');
     }
 }
