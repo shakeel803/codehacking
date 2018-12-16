@@ -122,7 +122,7 @@
                     </li>
 
                     <li>
-                        <a href="#"><i class="fa fa-wrench fa-fw"></i>Users<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-user fa-fw"></i>Users<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="{{ route('admin.users.index') }}">All Users</a>
@@ -137,7 +137,7 @@
                     </li>
 
                     <li>
-                        <a href="#"><i class="fa fa-wrench fa-fw"></i> Posts<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-file fa-fw"></i> Posts<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="{{ route('admin.posts.index') }}">All Posts</a>
@@ -146,6 +146,9 @@
                             <li>
                                 <a href="{{ route('admin.posts.create') }}">Create Post</a>
                             </li>
+                            <li>
+                                    <a href="{{ route('admin.comments.index') }}">Comments</a>
+                            </li>
 
                         </ul>
                         <!-- /.nav-second-level -->
@@ -153,12 +156,12 @@
 
 
                     <li>
-                        <a href="{{ route('admin.categories.index') }}"><i class="fa fa-wrench fa-fw"></i>Categories</a>
+                        <a href="{{ route('admin.categories.index') }}"><i class="fa fa-list fa-fw"></i>Categories</a>
                     </li>
 
 
                     <li>
-                        <a href="#"><i class="fa fa-wrench fa-fw"></i>Media<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-image fa-fw"></i>Media<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="{{ route('admin.media.index') }}">All Media</a>
@@ -172,6 +175,9 @@
                         <!-- /.nav-second-level -->
                     </li>
 
+                    {{-- <li>
+                        <a href="{{ route('admin.comments.index') }}"><i class="fa fa-comments fa-fw"></i>Comments</a>
+                    </li> --}}
 
 
 
