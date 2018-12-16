@@ -8,11 +8,7 @@
 
     <h1>Edit User</h1>
     <div class="col-sm-3">
-        @if ($user->photo)
-            <img class="img-responsive img-circle" src="{{ $user->photo->file }}">
-        @else
-            <img class="img-responsive img-circle" src="{{ "/images/no-image.jpg" }}">
-        @endif
+        <img src="{{ $user->photo ? $user->photo->file : 'https://via.placeholder.com/100' }}" class="img-responsive img-rounded">
     </div>
     <div class="col-sm-9">
         @include('includes.form_errors')
