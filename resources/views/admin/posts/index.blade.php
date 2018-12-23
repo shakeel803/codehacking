@@ -15,7 +15,9 @@
             <th>Photo</th>
             <th>Title</th>
             <th>Body</th>
+            <th>Link</th>
             <th>Author</th>
+            <th>Comments</th>
             <th>Category</th>
             <th>Created</th>
             <th>Updated</th>
@@ -38,7 +40,9 @@
                             <a href="{{URL("admin/posts/".$post->id."/edit") }}">{{ $post->title }}</a>
                         </td>
                         <td>{{ str_limit($post->body,15) }}</td>
+                        <td><a href="/post/{{ $post->id }}" target="_blank">View</a></td>
                         <td>{{ $post->user->name }}</td>
+                        <td><a href="{{ route('admin.comments.show',$post->id) }}">View</a></td>
                         <td>{{ $post->category ? $post->category->name : 'Uncategorized' }}</td>
                         <td>{{ $post->created_at->diffForHumans() }}</td>
                         <td>{{ $post->updated_at->diffForHumans() }}</td>

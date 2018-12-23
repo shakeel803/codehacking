@@ -15,7 +15,7 @@
                 <p class="lead">
                     by <a href="#">{{ $post->user->name }}</a>
                 </p>
-
+                @include('includes.flash')
                 <hr>
 
                 <!-- Date/Time -->
@@ -27,48 +27,77 @@
                 <img class="img-responsive" src="{{ $post->photo->file }}" alt="">
 
                 <hr>
-
                 <!-- Post Content -->
-                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus, vero, obcaecati, aut, error quam sapiente nemo saepe quibusdam sit excepturi nam quia corporis eligendi eos magni recusandae laborum minus inventore?</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, doloribus, dolorem iusto blanditiis unde eius illum consequuntur neque dicta incidunt ullam ea hic porro optio ratione repellat perspiciatis. Enim, iure!</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error, nostrum, aliquid, animi, ut quas placeat totam sunt tempora commodi nihil ullam alias modi dicta saepe minima ab quo voluptatem obcaecati?</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum, dolor quis. Sunt, ut, explicabo, aliquam tenetur ratione tempore quidem voluptates cupiditate voluptas illo saepe quaerat numquam recusandae? Qui, necessitatibus, est!</p>
-
+                <p>{{ $post->body }}</p>
                 <hr>
 
                 <!-- Blog Comments -->
 
                 <!-- Comments Form -->
-                <div class="well">
-                    <h4>Leave a Comment:</h4>
-                    <form role="form">
-                        <div class="form-group">
-                            <textarea class="form-control" rows="3"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
+                @if (Auth::user())
+                    <div class="well">
+                        <h4>Leave a Comment:</h4>
+                        {!! Form::open(['method'=>'POST', 'action'=>'PostCommentsController@store']) !!}
+                            <input type="hidden" name="post_id" value="{{ $post->id }}">
+                            <div class="form-group">    
+                                {!! Form::textarea('body', null,['class'=>'form-control', 'rows' => 3,'style'=>'resize:none;']) !!}
+                            </div>
+                            {!! Form::submit('Submit comment',['class'=>'btn btn-primary','rows'=>2]) !!}
+                        {!! Form::close() !!}
+                    </div>
 
-                <hr>
+                    <hr>   
+                @endif
+                
 
                 <!-- Posted Comments -->
+                @if (count($comments)>0)
+                    @foreach ($comments as $cmt)
+                        <!-- Comment -->
+                        <div class="media">
+                            <a class="pull-left" href="#">
+                                <img class="media-object" width="64"  src="{{ $cmt->photo }}" alt="">
+                            </a>
+                            <div class="media-body">
+                                <h4 class="media-heading">{{ $cmt->author }}
+                                    <small>{{ $cmt->created_at->format('M d, Y')." at ".$cmt->created_at->format('h:i A') }}</small>
+                                </h4>
+                                {{ $cmt->body }}
 
+                                @foreach ($cmt->replies as $reply)
+                                    
+                               
+                                <!-- Nested Comment -->
+                                    <div class="media">
+                                        <a class="pull-left" href="#">
+                                            <img width="64" class="media-object" src="{{ $reply->photo }}" alt="">
+                                        </a>
+                                        <div class="media-body">
+                                            <h4 class="media-heading">{{ $reply->author }}
+                                                    <small>{{ $reply->created_at->format('M d, Y')." at ".$reply->created_at->format('h:i A') }}</small>
+                                            </h4>
+                                            {{ $reply->body }}
+                                            @include('includes.form_errors')
+                                            {!! Form::open(['method'=>'POST', 'action'=>'CommentRepliesController@createReply']) !!}
+                                                <input type="hidden" name="comment_id" value="{{ $cmt->id }}">
+                                                <div class="form-group">
+                                                    {!! Form::textarea('body',null, ['class'=>'form-control','rows'=>2,'style'=>'resize:none;']) !!}
+                                                </div>
+                                                {!! Form::submit('Submit comment',['class'=>'btn btn-primary']) !!}
+                                            {!! Form::close() !!}
+                                        </div>
+                                    </div>
+                                    <!-- End Nested Comment -->
+                                @endforeach
+                            </div>
+                            
+                        </div>
+                    @endforeach
+                @else
+                    {{ "No comments" }}
+                @endif
                 <!-- Comment -->
-                <div class="media">
-                    <a class="pull-left" href="#">
-                        <img class="media-object" src="http://placehold.it/64x64" alt="">
-                    </a>
-                    <div class="media-body">
-                        <h4 class="media-heading">Start Bootstrap
-                            <small>August 25, 2014 at 9:30 PM</small>
-                        </h4>
-                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                    </div>
-                </div>
-
-                <!-- Comment -->
-                <div class="media">
+                {{-- <div class="media">
                     <a class="pull-left" href="#">
                         <img class="media-object" src="http://placehold.it/64x64" alt="">
                     </a>
@@ -91,6 +120,6 @@
                         </div>
                         <!-- End Nested Comment -->
                     </div>
-                </div>
+                </div> --}}
     
 @endsection
