@@ -15,6 +15,7 @@
             <th>Author</th>
             <th>Email</th>
             <th>Body</th>
+            <th>Replies</th>
             <th>Approve</th>
             <th>Delete</th>
           </tr>
@@ -30,6 +31,14 @@
                         <td>{{ $cmt->author }}</td>
                         <td>{{ $cmt->email }}</td>
                         <td>{{ $cmt->body }}</td>
+                        <td>
+                            @if (count($cmt->replies)>0)
+                                <a href="{{URL('/admin/comment/replies/'.$cmt->id)}}">View</a>   
+                            @else
+                                <span class="text-danger">No replies</span>
+                            @endif
+                            
+                        </td>
                         <td>
                             @if ($cmt->is_active == 0)
                                 {!! Form::open(['method'=>'PATCH','action'=>['PostCommentsController@update',$cmt->id]]) !!}

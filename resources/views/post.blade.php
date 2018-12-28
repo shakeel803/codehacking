@@ -63,32 +63,39 @@
                                     <small>{{ $cmt->created_at->format('M d, Y')." at ".$cmt->created_at->format('h:i A') }}</small>
                                 </h4>
                                 {{ $cmt->body }}
-
-                                @foreach ($cmt->replies as $reply)
-                                    
-                               
-                                <!-- Nested Comment -->
-                                    <div class="media">
-                                        <a class="pull-left" href="#">
-                                            <img width="64" class="media-object" src="{{ $reply->photo }}" alt="">
-                                        </a>
-                                        <div class="media-body">
-                                            <h4 class="media-heading">{{ $reply->author }}
-                                                    <small>{{ $reply->created_at->format('M d, Y')." at ".$reply->created_at->format('h:i A') }}</small>
-                                            </h4>
-                                            {{ $reply->body }}
-                                            @include('includes.form_errors')
-                                            {!! Form::open(['method'=>'POST', 'action'=>'CommentRepliesController@createReply']) !!}
-                                                <input type="hidden" name="comment_id" value="{{ $cmt->id }}">
-                                                <div class="form-group">
-                                                    {!! Form::textarea('body',null, ['class'=>'form-control','rows'=>2,'style'=>'resize:none;']) !!}
-                                                </div>
-                                                {!! Form::submit('Submit comment',['class'=>'btn btn-primary']) !!}
-                                            {!! Form::close() !!}
+                                
+                                @if (count($cmt->replies)>0)
+                                    @foreach ($cmt->replies as $reply)
+                                        @if($reply->is_active)
+                                        <!--Nested Comment Replies -->
+                                        <div id="nested-comment" class="media">
+                                            <a class="pull-left" href="#">
+                                                <img width="64" class="media-object" src="{{ $reply->photo }}" alt="">
+                                            </a>
+                                            <div class="media-body">
+                                                <h4 class="media-heading">{{ $reply->author }}
+                                                        <small>{{ $reply->created_at->format('M d, Y')." at ".$reply->created_at->format('h:i A') }}</small>
+                                                </h4>
+                                                {{ $reply->body }}
+                                            </div>
                                         </div>
+                                        <!-- End Nested Comment -->
+                                        @endif
+                                    @endforeach
+                                @endif
+                                <div class="comment-reply-container mt-1">
+                                    <button class="toggle-reply btn btn-primary btn-xs pull-right">Reply</button>
+                                    <div class="comment-form col-sm-8">
+                                        @include('includes.form_errors')
+                                        {!! Form::open(['method'=>'POST', 'action'=>'CommentRepliesController@createReply']) !!}
+                                            <input type="hidden" name="comment_id" value="{{ $cmt->id }}">
+                                            <div class="form-group">
+                                                {!! Form::textarea('body',null, ['class'=>'form-control','rows'=>2,'style'=>'resize:none;']) !!}
+                                            </div>
+                                            {!! Form::submit('Submit comment',['class'=>'btn btn-primary']) !!}
+                                        {!! Form::close() !!}
                                     </div>
-                                    <!-- End Nested Comment -->
-                                @endforeach
+                                </div>
                             </div>
                             
                         </div>
@@ -121,5 +128,15 @@
                         <!-- End Nested Comment -->
                     </div>
                 </div> --}}
+    
+@endsection
+
+@section('scripts')
+
+<script>
+    $(".comment-reply-container .toggle-reply").click(function(){
+        $(this).next().slideToggle("fast");
+    });
+</script>
     
 @endsection

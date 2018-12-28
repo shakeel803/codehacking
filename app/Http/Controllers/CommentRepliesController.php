@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Requests\CommentReplyRequest;
 use App\CommentReply;
 use Auth;
+use Session;
 
 class CommentRepliesController extends Controller
 {
@@ -18,7 +19,9 @@ class CommentRepliesController extends Controller
      */
     public function index()
     {
-        //
+        $replies = CommentReply::all();
+        //return $replies;
+        return view('admin.comments.replies.index', compact('replies'));
     }
 
     /**
@@ -68,7 +71,8 @@ class CommentRepliesController extends Controller
      */
     public function show($id)
     {
-        //
+        $replies = CommentReply::whereCommentId($id)->get();
+        return view('admin.comments.replies.show',compact('replies'));
     }
 
     /**
@@ -91,7 +95,13 @@ class CommentRepliesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $reply = CommentReply::findOrFail($id);
+        $reply->update($request->all());
+        if($request->is_active)
+            $request->session()->flash('msg','Reply approved');
+        else
+            $request->session()->flash('msg','Reply un-approved');
+        return redirect()->back();
     }
 
     /**
@@ -102,6 +112,8 @@ class CommentRepliesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        CommentReply::findOrFail($id)->delete();
+        Session::flash('msg','Reply has been deleted');
+        return redirect()->back();
     }
 }
